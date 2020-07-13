@@ -469,6 +469,12 @@ function axis_limits(sp, letter, should_widen = default_should_widen(sp[Symbol(l
     if !isfinite(amin) && !isfinite(amax)
         amin, amax = 0.0, 1.0
     end
+    if axis[:scale] in (:log10, :log2, :log, :ln)
+        if amin < 0
+            @info "log scale with negative data" amin maxlog=1 _id=hash(amin)
+            amin = 0.01
+        end
+    end
     amin, amax = if ispolar(axis.sps[1])
         if axis[:letter] == :x
             amin, amax = 0, 2pi
